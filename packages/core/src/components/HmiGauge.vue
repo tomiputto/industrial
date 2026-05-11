@@ -159,14 +159,14 @@ const fullArc = computed(() => {
 const fullNeedle = computed(() => {
   const { cx, cy, r } = FULL
   const nAng = fullArc.value.endAng * Math.PI / 180
-  const tipR = r - 8    // just inside the tick ring
-  const hubR = 10       // near center hub
+  const tipR = r - 2    // at outer edge
+  const baseR = r - 16  // short, near tick area
   const tipX = cx + Math.cos(nAng) * tipR
   const tipY = cy + Math.sin(nAng) * tipR
-  const bCX  = cx + Math.cos(nAng) * hubR
-  const bCY  = cy + Math.sin(nAng) * hubR
+  const bCX  = cx + Math.cos(nAng) * baseR
+  const bCY  = cy + Math.sin(nAng) * baseR
   const perp = nAng + Math.PI / 2
-  const w = 3
+  const w = 5
   return {
     points: `${tipX},${tipY} ${bCX + Math.cos(perp) * w},${bCY + Math.sin(perp) * w} ${bCX - Math.cos(perp) * w},${bCY - Math.sin(perp) * w}`
   }
@@ -291,7 +291,6 @@ const ariaValueText = computed(() => `${props.value} ${props.unit}`.trim())
             :points="fullNeedle.points"
             :fill="C.blue"
           />
-          <circle v-if="showNeedle" :cx="FULL.cx" :cy="FULL.cy" r="5" :fill="C.blue" />
         </svg>
         <div class="hmi-gauge-full-wrap__center" aria-hidden="true">
           <slot name="center">
