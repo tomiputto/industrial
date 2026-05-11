@@ -378,7 +378,7 @@ const stats = ref([
 
 .rpm-readout {
   text-align: center;
-  margin-top: -24px;
+  margin-top: -56px;
 }
 .rpm-readout__n {
   font-size: 36px;
