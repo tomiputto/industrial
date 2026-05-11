@@ -174,11 +174,17 @@ const fullNeedle = computed(() => {
 
 const fullScaleLabels = computed(() => {
   const { cx, cy, r, startAngle, sweep } = FULL
+  const lr = r + 14
+  if (props.scaleLabels) {
+    return props.scaleLabels.map(({ t, text }) => {
+      const ang = (startAngle + t * sweep) * Math.PI / 180
+      return { x: cx + Math.cos(ang) * lr, y: cy + Math.sin(ang) * lr, txt: text }
+    })
+  }
   const count = 7
   return Array.from({ length: count }, (_, i) => {
     const t = i / (count - 1)
     const ang = (startAngle + t * sweep) * Math.PI / 180
-    const lr = r + 14
     const val = Math.round(props.min + t * (props.max - props.min))
     return { x: cx + Math.cos(ang) * lr, y: cy + Math.sin(ang) * lr, txt: String(val) }
   })

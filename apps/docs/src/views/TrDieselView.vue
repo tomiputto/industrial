@@ -87,6 +87,7 @@ const stats = ref([
             label="Fuel"
             unit=""
             :red-zone="0.09"
+            :scale-labels="[{ t: 0, text: '0/2' }, { t: 0.5, text: '1/2' }, { t: 1, text: '2/2' }]"
           >
             <template #center>
               <svg
