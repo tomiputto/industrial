@@ -12,6 +12,9 @@ import {
   HmiPanel,
   type TabOption,
 } from '@sandvik/core'
+import TrDieselView from './views/TrDieselView.vue'
+
+const page = ref<'ds' | 'tramming'>('ds')
 
 const activeMode = ref('drilling')
 const modeTabs: TabOption[] = [
@@ -32,7 +35,14 @@ const flowRate = ref(64)
 </script>
 
 <template>
-  <main id="main" class="page">
+  <div class="app-nav">
+    <button :class="['app-nav__btn', { active: page === 'ds' }]" @click="page = 'ds'">Design System</button>
+    <button :class="['app-nav__btn', { active: page === 'tramming' }]" @click="page = 'tramming'">Tramming · Diesel</button>
+  </div>
+
+  <TrDieselView v-if="page === 'tramming'" />
+
+  <main v-else id="main" class="page">
 
     <!-- ═══ MASTHEAD ═══ -->
     <header class="masthead">
@@ -299,13 +309,13 @@ const flowRate = ref(64)
     <section id="gauges">
       <div class="section-head">
         <div class="section-label">07 · Gauges</div>
-        <h2>Gauges &amp; level indicators <span class="sub">half-arc, full-circle, segmented bars</span></h2>
+        <h2>Gauges &amp; level indicators <span class="sub">full-circle, segmented bars</span></h2>
       </div>
       <div class="section-body">
 
         <div class="grid cols-3" style="gap:20px;margin-bottom:24px">
-          <HmiGauge type="half" :value="speedValue" :max="15" unit="km/h" label="Speed" :red-zone="0.10" />
-          <HmiGauge type="half" :value="0.62" :max="1" label="Half-arc · fuel" :red-zone="0.14">
+          <HmiGauge type="full" :value="speedValue" :max="15" unit="km/h" label="Speed" :red-zone="0.10" />
+          <HmiGauge type="full" :value="0.62" :max="1" label="Full-circle · fuel" :red-zone="0.14">
             <template #center>
               <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--hmi-ink-2)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" style="margin:0 auto">
                 <path d="M3 22V4a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v18"/><path d="M3 22h11"/>
@@ -371,6 +381,36 @@ const flowRate = ref(64)
 </template>
 
 <style>
+/* ── App nav ── */
+.app-nav {
+  display: flex;
+  gap: 2px;
+  padding: 10px 16px;
+  background: var(--hmi-surface-1);
+  border-bottom: 1px solid var(--hmi-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.app-nav__btn {
+  padding: 8px 20px;
+  border-radius: var(--hmi-r-2);
+  border: 1px solid transparent;
+  font-family: var(--hmi-font);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--hmi-ink-3);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.app-nav__btn:hover { background: var(--hmi-surface-2); color: var(--hmi-ink-1); }
+.app-nav__btn.active {
+  background: var(--hmi-surface-2);
+  color: var(--hmi-ink-1);
+  border-color: var(--hmi-border);
+}
+
 /* ── Page chrome ── */
 .page {
   max-width: 1480px;

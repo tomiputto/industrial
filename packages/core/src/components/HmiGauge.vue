@@ -4,31 +4,37 @@ import { computed } from 'vue'
 export type GaugeType = 'half' | 'full'
 
 const props = withDefaults(defineProps<{
-  /** 'half' = half-arc, 'full' = full-circle */
+  /**
+   * 'half' = wide-arc (200°→340°, 140° sweep) — for speed/fuel style readouts
+   * 'full' = full-circle (135°→405°, 270° sweep)
+   */
   type?: GaugeType
   value: number
   min?: number
   max: number
   unit?: string
   label: string
-  /** Fraction of arc (from end) shown in orange. Default 0.14 */
+  /** Fraction of arc (from high end) shown in orange. Default 0.14 */
   redZone?: number
-  /** Show needle indicator */
+  /** Number of ticks at the LOW end shown in orange (for fuel empty). Default 0 */
+  redZoneLow?: number
   showNeedle?: boolean
+  /** Scale labels: array of { t: 0..1, text: string } */
+  scaleLabels?: { t: number; text: string }[]
 }>(), {
   type: 'full',
   min: 0,
   unit: '',
   redZone: 0.14,
+  redZoneLow: 0,
   showNeedle: true,
 })
 
-// ── colours (match prototype) ──
 const C = {
-  track:    '#5e6770',
-  blue:     '#1f8fe6',
-  orange:   '#f26a1a',
-  inkMute:  '#5e6770',
+  track:   '#586168',
+  blue:    '#1f8fe6',
+  orange:  '#f26a1a',
+  inkMute: '#5e6770',
 }
 
 const ratio = computed(() => {
@@ -36,114 +42,137 @@ const ratio = computed(() => {
   return Math.max(0, Math.min(1, r))
 })
 
-// ─────────────────────── half arc ───────────────────────
-interface Seg { x1: number; y1: number; x2: number; y2: number; color: string }
+// ─────────────────────── WIDE ARC (half) ───────────────────────
+// viewBox 320×220, cx=160, cy=178, r=130, sweep 200°→340°
+
+interface Seg { x1: number; y1: number; x2: number; y2: number; color: string; wide: boolean }
+
+const HALF = { cx: 160, cy: 178, r: 130, startAngle: 200, endAngle: 340, ticks: 56 }
 
 const halfSegs = computed<Seg[]>(() => {
-  const cx = 120, cy = 130, r = 96
-  const startAngle = 180, endAngle = 360
-  const ticks = 50
-  const redZone = props.redZone
-  const segs: Seg[] = []
+  const { cx, cy, r, startAngle, endAngle, ticks } = HALF
+  const sweep = endAngle - startAngle
+  const fillIdx = Math.round(ratio.value * (ticks - 1))
+  const redHigh = ticks - Math.round(props.redZone * ticks)
+  const redLow  = Math.round(props.redZoneLow * ticks)
 
-  for (let i = 0; i < ticks; i++) {
+  return Array.from({ length: ticks }, (_, i) => {
     const t = i / (ticks - 1)
-    const ang = startAngle + t * (endAngle - startAngle)
+    const ang = startAngle + t * sweep
     const rad = ang * Math.PI / 180
-    const inner = r - 12
-    const outer = i === Math.round((1 - redZone) * ticks - 1) ? r + 4 : r
-    const x1 = cx + Math.cos(rad) * inner
-    const y1 = cy + Math.sin(rad) * inner
-    const x2 = cx + Math.cos(rad) * outer
-    const y2 = cy + Math.sin(rad) * outer
-    const redEnd = Math.round(redZone * ticks)
-    const redStart = Math.round((1 - redZone) * ticks)
-    const color = (i < redEnd || i >= redStart) ? C.orange : C.track
-    segs.push({ x1, y1, x2, y2, color })
-  }
-  return segs
+    const inner = r - 14
+    const outer = r
+    const color = (i < redLow || i >= redHigh) ? C.orange : C.track
+    return {
+      x1: cx + Math.cos(rad) * inner,
+      y1: cy + Math.sin(rad) * inner,
+      x2: cx + Math.cos(rad) * outer,
+      y2: cy + Math.sin(rad) * outer,
+      color,
+      wide: i === fillIdx,
+    }
+  })
 })
 
 const halfArc = computed(() => {
-  const cx = 120, cy = 130, r = 96
-  const startAngle = 180, endAngle = 360
-  const arcR = r - 22
-  const arcEndAng = startAngle + ratio.value * (endAngle - startAngle)
-  const largeArc = arcEndAng - startAngle > 180 ? 1 : 0
+  const { cx, cy, r, startAngle, endAngle } = HALF
+  const sweep = endAngle - startAngle
+  const arcR = r - 30
+  const arcEndAng = startAngle + ratio.value * sweep
+  const large = (arcEndAng - startAngle) > 180 ? 1 : 0
   const ax1 = cx + Math.cos(startAngle * Math.PI / 180) * arcR
   const ay1 = cy + Math.sin(startAngle * Math.PI / 180) * arcR
   const ax2 = cx + Math.cos(arcEndAng * Math.PI / 180) * arcR
   const ay2 = cy + Math.sin(arcEndAng * Math.PI / 180) * arcR
-  return { d: `M ${ax1} ${ay1} A ${arcR} ${arcR} 0 ${largeArc} 1 ${ax2} ${ay2}`, endAng: arcEndAng }
+  return { d: `M ${ax1} ${ay1} A ${arcR} ${arcR} 0 ${large} 1 ${ax2} ${ay2}`, endAng: arcEndAng }
 })
 
 const halfNeedle = computed(() => {
-  const cx = 120, cy = 130, r = 96
+  const { cx, cy, r } = HALF
   const { endAng } = halfArc.value
   const nAng = endAng * Math.PI / 180
-  const nx = cx + Math.cos(nAng) * (r - 8)
-  const ny = cy + Math.sin(nAng) * (r - 8)
-  const inx = cx + Math.cos(nAng) * (r - 28)
-  const iny = cy + Math.sin(nAng) * (r - 28)
-  const perp = nAng + Math.PI / 2
-  const w = 8
+  const tipX  = cx + Math.cos(nAng) * (r - 6)
+  const tipY  = cy + Math.sin(nAng) * (r - 6)
+  const baseR = r - 26
+  const bCX   = cx + Math.cos(nAng) * baseR
+  const bCY   = cy + Math.sin(nAng) * baseR
+  const perp  = nAng + Math.PI / 2
+  const w = 11
   return {
-    points: `${nx},${ny} ${inx + Math.cos(perp) * w},${iny + Math.sin(perp) * w} ${inx - Math.cos(perp) * w},${iny - Math.sin(perp) * w}`
+    points: `${tipX},${tipY} ${bCX + Math.cos(perp) * w},${bCY + Math.sin(perp) * w} ${bCX - Math.cos(perp) * w},${bCY - Math.sin(perp) * w}`
   }
 })
 
-// ─────────────────────── full circle ───────────────────────
-const fullSegs = computed<Seg[]>(() => {
-  const cx = 100, cy = 100, r = 76
-  const startAngle = 135, sweep = 270
-  const ticks = 48
+const halfScaleLabels = computed(() => {
+  if (props.scaleLabels) return props.scaleLabels.map(({ t, text }) => {
+    const { cx, cy, r, startAngle, endAngle } = HALF
+    const ang = (startAngle + t * (endAngle - startAngle)) * Math.PI / 180
+    const lr = r + 22
+    return { x: cx + Math.cos(ang) * lr, y: cy + Math.sin(ang) * lr, text }
+  })
+  // auto-generate from min/max
+  const { cx, cy, r, startAngle, endAngle } = HALF
+  const sweep = endAngle - startAngle
+  return [0, 0.25, 0.5, 0.75, 1].map(t => {
+    const ang = (startAngle + t * sweep) * Math.PI / 180
+    const lr = r + 22
+    const val = Math.round(props.min + t * (props.max - props.min))
+    return { x: cx + Math.cos(ang) * lr, y: cy + Math.sin(ang) * lr, text: String(val) }
+  })
+})
+
+// ─────────────────────── FULL CIRCLE ───────────────────────
+// viewBox 200×200, cx=100, cy=100, r=76, sweep 135°→405° (270°)
+
+const FULL = { cx: 100, cy: 100, r: 76, startAngle: 135, sweep: 270, ticks: 48 }
+
+const fullSegs = computed<{ x1: number; y1: number; x2: number; y2: number; color: string }[]>(() => {
+  const { cx, cy, r, startAngle, sweep, ticks } = FULL
   const redStart = Math.round((1 - props.redZone) * ticks)
-  const segs: Seg[] = []
-  for (let i = 0; i < ticks; i++) {
+  return Array.from({ length: ticks }, (_, i) => {
     const t = i / (ticks - 1)
     const ang = startAngle + t * sweep
     const rad = ang * Math.PI / 180
     const inner = r - 9
-    const x1 = cx + Math.cos(rad) * inner
-    const y1 = cy + Math.sin(rad) * inner
-    const x2 = cx + Math.cos(rad) * r
-    const y2 = cy + Math.sin(rad) * r
-    segs.push({ x1, y1, x2, y2, color: i >= redStart ? C.orange : C.track })
-  }
-  return segs
+    return {
+      x1: cx + Math.cos(rad) * inner,
+      y1: cy + Math.sin(rad) * inner,
+      x2: cx + Math.cos(rad) * r,
+      y2: cy + Math.sin(rad) * r,
+      color: i >= redStart ? C.orange : C.track,
+    }
+  })
 })
 
 const fullArc = computed(() => {
-  const cx = 100, cy = 100, r = 76
-  const startAngle = 135, sweep = 270
+  const { cx, cy, r, startAngle, sweep } = FULL
   const arcR = r - 17
   const endAng = startAngle + ratio.value * sweep
   const ax1 = cx + Math.cos(startAngle * Math.PI / 180) * arcR
   const ay1 = cy + Math.sin(startAngle * Math.PI / 180) * arcR
   const ax2 = cx + Math.cos(endAng * Math.PI / 180) * arcR
   const ay2 = cy + Math.sin(endAng * Math.PI / 180) * arcR
-  const largeArc = ratio.value * sweep > 180 ? 1 : 0
-  return { d: `M ${ax1} ${ay1} A ${arcR} ${arcR} 0 ${largeArc} 1 ${ax2} ${ay2}`, endAng }
+  const large = ratio.value * sweep > 180 ? 1 : 0
+  return { d: `M ${ax1} ${ay1} A ${arcR} ${arcR} 0 ${large} 1 ${ax2} ${ay2}`, endAng }
 })
 
 const fullNeedle = computed(() => {
-  const cx = 100, cy = 100, r = 76
+  const { cx, cy, r } = FULL
   const nAng = fullArc.value.endAng * Math.PI / 180
-  const nx = cx + Math.cos(nAng) * (r - 4)
-  const ny = cy + Math.sin(nAng) * (r - 4)
-  const inx = cx + Math.cos(nAng) * (r - 22)
-  const iny = cy + Math.sin(nAng) * (r - 22)
+  const tipX = cx + Math.cos(nAng) * (r - 4)
+  const tipY = cy + Math.sin(nAng) * (r - 4)
+  const bR   = r - 22
+  const bCX  = cx + Math.cos(nAng) * bR
+  const bCY  = cy + Math.sin(nAng) * bR
   const perp = nAng + Math.PI / 2
   const w = 6
   return {
-    points: `${nx},${ny} ${inx + Math.cos(perp) * w},${iny + Math.sin(perp) * w} ${inx - Math.cos(perp) * w},${iny - Math.sin(perp) * w}`
+    points: `${tipX},${tipY} ${bCX + Math.cos(perp) * w},${bCY + Math.sin(perp) * w} ${bCX - Math.cos(perp) * w},${bCY - Math.sin(perp) * w}`
   }
 })
 
-// Scale labels for full gauge
 const fullScaleLabels = computed(() => {
-  const cx = 100, cy = 100, r = 76
-  const startAngle = 135, sweep = 270
+  const { cx, cy, r, startAngle, sweep } = FULL
   const count = 7
   return Array.from({ length: count }, (_, i) => {
     const t = i / (count - 1)
@@ -154,9 +183,7 @@ const fullScaleLabels = computed(() => {
   })
 })
 
-const ariaValueText = computed(() =>
-  `${props.value} ${props.unit || ''}`.trim()
-)
+const ariaValueText = computed(() => `${props.value} ${props.unit}`.trim())
 </script>
 
 <template>
@@ -171,12 +198,12 @@ const ariaValueText = computed(() =>
   >
     <div class="hmi-gauge-card__title">{{ label }}</div>
 
-    <!-- ── Half arc ── -->
+    <!-- ── Wide-arc (half) ── -->
     <template v-if="type === 'half'">
       <div class="hmi-gauge-half-wrap">
         <svg
-          class="hmi-gauge-svg"
-          viewBox="0 0 240 160"
+          class="hmi-gauge-svg hmi-gauge-svg--half"
+          viewBox="0 0 320 220"
           aria-hidden="true"
           focusable="false"
         >
@@ -186,14 +213,14 @@ const ariaValueText = computed(() =>
             :x1="seg.x1" :y1="seg.y1"
             :x2="seg.x2" :y2="seg.y2"
             :stroke="seg.color"
-            stroke-width="3"
+            :stroke-width="seg.wide ? '5' : '3.4'"
             stroke-linecap="butt"
           />
           <path
             v-if="ratio > 0"
             :d="halfArc.d"
             :stroke="C.blue"
-            stroke-width="7"
+            stroke-width="8"
             fill="none"
             stroke-linecap="round"
           />
@@ -202,6 +229,17 @@ const ariaValueText = computed(() =>
             :points="halfNeedle.points"
             :fill="C.blue"
           />
+          <text
+            v-for="lbl in halfScaleLabels"
+            :key="lbl.text"
+            :x="lbl.x" :y="lbl.y"
+            :fill="C.inkMute"
+            font-size="16"
+            font-weight="600"
+            font-family="Manrope, system-ui, sans-serif"
+            text-anchor="middle"
+            dominant-baseline="middle"
+          >{{ lbl.text }}</text>
         </svg>
         <div class="hmi-gauge-half-wrap__center" aria-hidden="true">
           <slot name="center">
@@ -289,15 +327,18 @@ const ariaValueText = computed(() =>
   display: block;
 }
 
-/* ── Half arc ── */
+/* ── Wide-arc (half) ── */
 .hmi-gauge-half-wrap {
   position: relative;
   text-align: center;
 }
+.hmi-gauge-svg--half {
+  max-height: 160px;
+}
 .hmi-gauge-half-wrap__center {
   position: absolute;
   left: 0; right: 0;
-  bottom: 22%;
+  bottom: 8%;
   text-align: center;
   pointer-events: none;
 }
