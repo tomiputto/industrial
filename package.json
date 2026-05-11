@@ -1,0 +1,17 @@
+{
+  "name": "sandvik-hmi-ds",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "pnpm --filter docs dev",
+    "build": "pnpm -r build",
+    "build:tokens": "pnpm --filter @sandvik/tokens build",
+    "build:core": "pnpm --filter @sandvik/core build",
+    "build:docs": "pnpm --filter docs build"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vue-tsc": "^2.0.19"
+  }
+}

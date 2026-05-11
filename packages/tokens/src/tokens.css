@@ -1,0 +1,74 @@
+/**
+ * Sandvik Industrial HMI Design System — Design Tokens
+ * Dark theme · WCAG 2.2 AA · Touch-first
+ */
+
+:root {
+  /* ── Surfaces ── */
+  --hmi-bg:           #07090b;
+  --hmi-surface-0:    #0e1216;
+  --hmi-surface-1:    #161b20;
+  --hmi-surface-2:    #1f262d;
+  --hmi-surface-3:    #2a323a;
+  --hmi-surface-4:    #3a444d;
+
+  /* ── Borders ── */
+  --hmi-border:        #4a555f;   /* 3.05:1 vs bg — component edges */
+  --hmi-border-soft:   #2d353d;   /* decorative dividers only */
+  --hmi-border-strong: #5e6770;   /* 3.5:1 vs s1 — focus / highlights */
+  --hmi-divider:       #2d353d;
+
+  /* ── Focus ── */
+  --hmi-focus-ring: 0 0 0 2px var(--hmi-bg), 0 0 0 4px var(--hmi-blue-300);
+
+  /* ── Ink (text) ── */
+  --hmi-ink-1:        #f1f4f7;
+  --hmi-ink-2:        #c4cdd5;
+  --hmi-ink-3:        #8d97a1;
+  --hmi-ink-4:        #5e6770;
+  --hmi-ink-5:        #3d454d;
+
+  /* ── Blue accent (primary action, active state) ── */
+  --hmi-blue-100:     #cfe6fb;
+  --hmi-blue-300:     #6bb5ee;
+  --hmi-blue-500:     #1f8fe6;
+  --hmi-blue-600:     #1474c4;
+  --hmi-blue-700:     #0d5897;
+
+  /* ── Orange accent (caution, restricted, hi-vis) ── */
+  --hmi-orange-100:   #ffd6b8;
+  --hmi-orange-300:   #ff9a5a;
+  --hmi-orange-500:   #f26a1a;
+  --hmi-orange-600:   #cc5210;
+  --hmi-orange-700:   #993c0a;
+
+  /* ── Semantic ── */
+  --hmi-ok:      #3aa66b;
+  --hmi-warn:    #e8a93a;
+  --hmi-danger:  #d83a3a;
+  --hmi-info:    #1f8fe6;
+
+  /* ── Radius ── */
+  --hmi-r-1:    3px;
+  --hmi-r-2:    6px;
+  --hmi-r-3:    10px;
+  --hmi-r-4:    14px;
+  --hmi-r-pill: 999px;
+
+  /* ── Spacing (4px base) ── */
+  --hmi-s-1:  4px;
+  --hmi-s-2:  8px;
+  --hmi-s-3:  12px;
+  --hmi-s-4:  16px;
+  --hmi-s-5:  24px;
+  --hmi-s-6:  32px;
+  --hmi-s-7:  48px;
+  --hmi-s-8:  64px;
+
+  /* ── Typography ── */
+  --hmi-font:      'Manrope', system-ui, -apple-system, sans-serif;
+  --hmi-mono:      'Manrope', system-ui, -apple-system, sans-serif;
+
+  /* ── Touch targets ── */
+  --hmi-touch-min: 56px;
+}

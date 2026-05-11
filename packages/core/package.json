@@ -1,0 +1,25 @@
+{
+  "name": "@sandvik/core",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles": "./src/styles/index.css"
+  },
+  "files": ["src"],
+  "scripts": {
+    "build": "vite build"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vue": "^3.4.21"
+  },
+  "dependencies": {
+    "@sandvik/tokens": "workspace:*"
+  }
+}

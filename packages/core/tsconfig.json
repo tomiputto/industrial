@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "declaration": true,
+    "declarationDir": "./dist"
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue"]
+}
