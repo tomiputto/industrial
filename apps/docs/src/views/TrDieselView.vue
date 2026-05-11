@@ -31,19 +31,6 @@ const stats = ref([
   { label: 'Intake temp',        value: 32, unit: '°C',  trend: -1 },
 ])
 
-// Fuel scale labels
-const fuelLabels = [
-  { t: 0,   text: '0' },
-  { t: 0.5, text: '1/2' },
-  { t: 1,   text: '1/1' },
-]
-// Speed scale labels
-const speedLabels = [
-  { t: 0,    text: '0' },
-  { t: 1/3,  text: '5' },
-  { t: 2/3,  text: '10' },
-  { t: 1,    text: '15' },
-]
 </script>
 
 <template>
@@ -94,14 +81,12 @@ const speedLabels = [
         <!-- LEFT: fuel -->
         <div class="gauge-block">
           <HmiGauge
-            type="half"
+            type="full"
             :value="fuelRatio"
             :max="1"
             label="Fuel"
             unit=""
-            :red-zone="0"
-            :red-zone-low="0.09"
-            :scale-labels="fuelLabels"
+            :red-zone="0.09"
           >
             <template #center>
               <svg
@@ -164,14 +149,12 @@ const speedLabels = [
         <!-- RIGHT: speed + RPM -->
         <div class="gauge-block">
           <HmiGauge
-            type="half"
+            type="full"
             :value="speedValue"
             :max="speedMax"
             label="Speed"
             unit="km/h"
             :red-zone="0.11"
-            :red-zone-low="0"
-            :scale-labels="speedLabels"
           />
           <div class="rpm-readout" aria-label="Engine 1230 rpm">
             <div class="rpm-readout__n">1230</div>
@@ -186,7 +169,7 @@ const speedLabels = [
 
         <!-- vehicle silhouette -->
         <div class="vehicle-card" aria-label="Vehicle status: parking brakes engaged on both axles at 80 bar">
-          <svg class="vehicle-svg" viewBox="0 0 540 160" aria-hidden="true">
+          <svg class="vehicle-svg" viewBox="0 0 540 186" aria-hidden="true">
             <defs>
               <pattern id="stripes" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
                 <rect width="8" height="8" fill="#1a2026"/>
@@ -221,11 +204,12 @@ const speedLabels = [
             <text x="300" y="126" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="700" font-size="16" fill="#f1f4f7">P</text>
             <!-- light marker -->
             <rect x="40" y="40" width="14" height="8" rx="1" fill="#1f262d" stroke="#3a444d"/>
+            <!-- axle labels — centred on wheel x coordinates -->
+            <text x="110" y="170" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="700" font-size="20" fill="#f1f4f7" font-variant-numeric="tabular-nums">80</text>
+            <text x="136" y="170" text-anchor="start"  font-family="Manrope, sans-serif" font-weight="500" font-size="13" fill="#8d97a1" letter-spacing="1">bar</text>
+            <text x="300" y="170" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="700" font-size="20" fill="#f1f4f7" font-variant-numeric="tabular-nums">80</text>
+            <text x="326" y="170" text-anchor="start"  font-family="Manrope, sans-serif" font-weight="500" font-size="13" fill="#8d97a1" letter-spacing="1">bar</text>
           </svg>
-          <div class="axle-labels">
-            <div class="axle-val">80<span class="axle-unit">bar</span></div>
-            <div class="axle-val">80<span class="axle-unit">bar</span></div>
-          </div>
         </div>
 
         <!-- stats grid -->
@@ -389,9 +373,7 @@ const speedLabels = [
   padding: 0;
 }
 .gauge-block :deep(.hmi-gauge-card__title) { display: none; }
-.gauge-block :deep(.hmi-gauge-svg--half) { max-height: 220px; }
-.gauge-block :deep(.hmi-gauge-half-wrap__center) { bottom: 14%; }
-.gauge-block :deep(.hmi-gauge__value) { font-size: 56px; }
+.gauge-block :deep(.hmi-gauge__value--full) { font-size: 48px; }
 .gauge-block :deep(.hmi-gauge__unit) { font-size: 13px; letter-spacing: 0.1em; }
 
 .rpm-readout {
@@ -502,27 +484,6 @@ const speedLabels = [
   width: 100%;
   height: 150px;
   display: block;
-}
-.axle-labels {
-  display: flex;
-  justify-content: space-around;
-  padding: 0 6% 0 4%;
-  margin-top: -10px;
-}
-.axle-val {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--hmi-ink-1);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
-}
-.axle-unit {
-  font-family: var(--hmi-mono);
-  font-size: 12px;
-  color: var(--hmi-ink-3);
-  font-weight: 500;
-  margin-left: 4px;
-  letter-spacing: 0.06em;
 }
 
 .stats-grid {
