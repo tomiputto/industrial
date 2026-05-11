@@ -384,6 +384,7 @@ const flowRate = ref(64)
 /* ── App nav ── */
 .app-nav {
   display: flex;
+  justify-content: center;
   gap: 2px;
   padding: 10px 16px;
   background: var(--hmi-surface-1);
