@@ -156,6 +156,7 @@ const stats = ref([
             label="Speed"
             unit="km/h"
             :red-zone="0.11"
+            :scale-labels="[{ t: 0, text: '0' }, { t: 1/3, text: '5' }, { t: 2/3, text: '10' }, { t: 1, text: '15' }]"
           />
           <div class="rpm-readout" aria-label="Engine 1230 rpm">
             <div class="rpm-readout__n">1230</div>
