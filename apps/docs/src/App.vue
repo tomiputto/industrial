@@ -13,8 +13,9 @@ import {
   type TabOption,
 } from '@sandvik/core'
 import TrDieselView from './views/TrDieselView.vue'
+import LiningView from './views/LiningView.vue'
 
-const page = ref<'ds' | 'tramming'>('ds')
+const page = ref<'ds' | 'tramming' | 'lining'>('ds')
 
 const activeMode = ref('drilling')
 const modeTabs: TabOption[] = [
@@ -38,9 +39,11 @@ const flowRate = ref(64)
   <div class="app-nav">
     <button :class="['app-nav__btn', { active: page === 'ds' }]" @click="page = 'ds'">Design System</button>
     <button :class="['app-nav__btn', { active: page === 'tramming' }]" @click="page = 'tramming'">Tramming · Diesel</button>
+    <button :class="['app-nav__btn', { active: page === 'lining' }]" @click="page = 'lining'">Lining</button>
   </div>
 
   <TrDieselView v-if="page === 'tramming'" />
+  <LiningView v-else-if="page === 'lining'" />
 
   <main v-else id="main" class="page">
 
