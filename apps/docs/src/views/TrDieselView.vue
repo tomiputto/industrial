@@ -370,7 +370,7 @@ const speedLabels = [
 
 /* ── Main ── */
 .main {
-  padding: 8px 14px 0;
+  padding: 32px 14px 0;
   display: grid;
   grid-template-columns: 1fr 240px 1fr;
   gap: 12px;
