@@ -155,15 +155,15 @@ const scaleMarks = [
               <!-- status circles on drill rig corners (after rotation so they appear fixed) -->
               <!-- top-left: allow (blue) -->
               <g :transform="`rotate(${equipRotation}, 350, 260)`">
-                <circle cx="270" cy="175" r="24" fill="#fff" stroke="#6bb5ee" stroke-width="3"/>
-                <!-- top-right: deny (orange) -->
-                <circle cx="430" cy="175" r="24" fill="#fff" stroke="#f26a1a" stroke-width="3"/>
-                <line x1="413" y1="158" x2="447" y2="192" stroke="#f26a1a" stroke-width="3" stroke-linecap="round"/>
-                <!-- bottom-left: deny (orange) -->
-                <circle cx="270" cy="345" r="24" fill="#fff" stroke="#f26a1a" stroke-width="3"/>
-                <line x1="253" y1="328" x2="287" y2="362" stroke="#f26a1a" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="270" cy="175" r="24" fill="#e3f2fd" stroke="#1565c0" stroke-width="4"/>
+                <!-- top-right: deny (red) -->
+                <circle cx="430" cy="175" r="24" fill="#ffebee" stroke="#c62828" stroke-width="4"/>
+                <line x1="413" y1="158" x2="447" y2="192" stroke="#c62828" stroke-width="3.5" stroke-linecap="round"/>
+                <!-- bottom-left: deny (red) -->
+                <circle cx="270" cy="345" r="24" fill="#ffebee" stroke="#c62828" stroke-width="4"/>
+                <line x1="253" y1="328" x2="287" y2="362" stroke="#c62828" stroke-width="3.5" stroke-linecap="round"/>
                 <!-- bottom-right: allow (blue) -->
-                <circle cx="430" cy="345" r="24" fill="#fff" stroke="#6bb5ee" stroke-width="3"/>
+                <circle cx="430" cy="345" r="24" fill="#e3f2fd" stroke="#1565c0" stroke-width="4"/>
               </g>
 
               <!-- horizontal scale line -->
