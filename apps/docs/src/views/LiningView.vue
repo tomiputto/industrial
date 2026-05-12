@@ -659,6 +659,7 @@ const scaleMarks = [
   align-items: center;
   gap: 10px;
   justify-content: center;
+  padding-right: 24px;
 }
 .depth-label {
   font-size: 15px;
