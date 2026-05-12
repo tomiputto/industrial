@@ -560,7 +560,7 @@ const scaleMarks = [
 .gauge-wrap :deep(.hmi-gauge-svg)         { max-height: 120px; }
 .gauge-wrap :deep(.hmi-gauge__value--full){ font-size: 26px; }
 .gauge-wrap :deep(.hmi-gauge__unit)       { font-size: 11px; margin-top: 2px; }
-.gauge-wrap :deep(.hmi-gauge-full-wrap__center) { top: 46%; }
+.gauge-wrap :deep(.hmi-gauge-full-wrap__center) { top: 56%; }
 
 .gauge-sub {
   display: flex;
@@ -569,7 +569,7 @@ const scaleMarks = [
   gap: 6px;
   color: var(--hmi-ink-2);
   font-size: 13px;
-  margin-top: -2px;
+  margin-top: -14px;
   height: 22px;
 }
 .gauge-sub__val  { font-weight: 700; font-size: 16px; color: var(--hmi-ink-1); font-variant-numeric: tabular-nums; }
