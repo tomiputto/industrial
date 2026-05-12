@@ -205,6 +205,59 @@ const scaleMarks = [
               >{{ positionM >= 0 ? '+' : '' }}{{ positionM.toFixed(1) }} m</text>
             </svg>
           </div>
+          <!-- ══ BOTTOM TOOLBAR ══ -->
+          <footer class="toolbar" aria-label="Drill controls">
+            <div class="toolbar__tools">
+              <button
+                v-for="(tool, i) in bottomTools"
+                :key="tool.label"
+                :class="['tool-btn', { 'tool-btn--active': activeTool === i }]"
+                :aria-label="tool.label"
+                :aria-pressed="activeTool === i"
+                @click="activeTool = i"
+              >
+                <!-- hand -->
+                <svg v-if="tool.icon === 'hand'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
+                  <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8H10a8 8 0 0 1-7.93-7H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1"/>
+                </svg>
+                <!-- arrow-down -->
+                <svg v-else-if="tool.icon === 'arrow-down'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>
+                </svg>
+                <!-- arrow-up -->
+                <svg v-else-if="tool.icon === 'arrow-up'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+                </svg>
+                <!-- flush -->
+                <svg v-else-if="tool.icon === 'flush'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M5 8h14M5 12h14M5 16h14"/>
+                  <polyline points="19 6 22 12 19 18"/>
+                </svg>
+                <!-- rotation -->
+                <svg v-else-if="tool.icon === 'rotation'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false">
+                  <circle cx="12" cy="12" r="8"/>
+                  <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="toolbar__depth">
+              <label class="depth-label" for="targetDepth">Target depth</label>
+              <input
+                id="targetDepth"
+                v-model.number="targetDepth"
+                type="number"
+                class="depth-input"
+                min="0"
+                step="0.1"
+                aria-label="Target depth in metres"
+              />
+              <span class="depth-unit">m</span>
+            </div>
+
+            <HmiButton variant="primary" @click="() => {}">Start Drilling</HmiButton>
+          </footer>
         </section>
 
         <!-- CENTER: vertical depth track -->
@@ -313,60 +366,6 @@ const scaleMarks = [
         </aside>
       </div>
 
-      <!-- ══ BOTTOM TOOLBAR ══ -->
-      <footer class="toolbar" aria-label="Drill controls">
-        <div class="toolbar__tools">
-          <button
-            v-for="(tool, i) in bottomTools"
-            :key="tool.label"
-            :class="['tool-btn', { 'tool-btn--active': activeTool === i }]"
-            :aria-label="tool.label"
-            :aria-pressed="activeTool === i"
-            @click="activeTool = i"
-          >
-            <!-- hand -->
-            <svg v-if="tool.icon === 'hand'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-              <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
-              <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8H10a8 8 0 0 1-7.93-7H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1"/>
-            </svg>
-            <!-- arrow-down -->
-            <svg v-else-if="tool.icon === 'arrow-down'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-              <line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>
-            </svg>
-            <!-- arrow-up -->
-            <svg v-else-if="tool.icon === 'arrow-up'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-              <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
-            </svg>
-            <!-- flush -->
-            <svg v-else-if="tool.icon === 'flush'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-              <path d="M5 8h14M5 12h14M5 16h14"/>
-              <polyline points="19 6 22 12 19 18"/>
-            </svg>
-            <!-- rotation -->
-            <svg v-else-if="tool.icon === 'rotation'" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false">
-              <circle cx="12" cy="12" r="8"/>
-              <circle cx="12" cy="12" r="2" fill="currentColor"/>
-            </svg>
-          </button>
-        </div>
-
-        <div class="toolbar__depth">
-          <label class="depth-label" for="targetDepth">Target depth</label>
-          <input
-            id="targetDepth"
-            v-model.number="targetDepth"
-            type="number"
-            class="depth-input"
-            min="0"
-            step="0.1"
-            aria-label="Target depth in metres"
-          />
-          <span class="depth-unit">m</span>
-        </div>
-
-        <HmiButton variant="primary" @click="() => {}">Start Drilling</HmiButton>
-      </footer>
-
     </div>
   </div>
 </template>
@@ -386,7 +385,7 @@ const scaleMarks = [
   height: 768px;
   background: var(--hmi-bg);
   display: grid;
-  grid-template-rows: 56px 1fr 88px;
+  grid-template-rows: 56px 1fr;
   overflow: hidden;
   flex-shrink: 0;
 }
