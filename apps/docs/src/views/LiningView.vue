@@ -1,6 +1,18 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { HmiGauge, HmiButton } from '@sandvik/core'
+
+// ── Live clock ──
+const clockTime = ref('')
+const clockDate = ref('')
+function updateClock() {
+  const now = new Date()
+  clockTime.value = now.toLocaleTimeString('fi-FI', { hour: '2-digit', minute: '2-digit' })
+  clockDate.value = `${now.getDate()}.${now.getMonth() + 1}.`
+}
+let clockTimer: ReturnType<typeof setInterval>
+onMounted(() => { updateClock(); clockTimer = setInterval(updateClock, 10000) })
+onUnmounted(() => clearInterval(clockTimer))
 
 // Angle readouts
 const tiltLateral     = ref(+7.2)   // ° lateral
@@ -73,9 +85,9 @@ const scaleMarks = [
               <path d="M13.7 21a2 2 0 0 1-3.4 0"/>
             </svg>
           </span>
-          <div class="clock">
-            <div class="clock__time">16:00</div>
-            <div class="clock__date">12.7.</div>
+          <div class="clock" aria-live="polite" aria-label="Current time">
+            <div class="clock__time">{{ clockTime }}</div>
+            <div class="clock__date">{{ clockDate }}</div>
           </div>
         </div>
       </header>
