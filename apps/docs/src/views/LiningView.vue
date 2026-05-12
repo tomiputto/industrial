@@ -21,11 +21,11 @@ const tiltLongitudinal = ref(-14.0) // ° longitudinal
 // Position
 const positionM = ref(-0.7) // metres from tunnel centre
 
-// Right sidebar gauges
-const percussionPressure = ref(82)
-const feedPressure       = ref(79)
-const flushPressure      = ref(79)
+// Right sidebar gauges — driven by drilling power
 const drillingPower      = ref(78)
+const percussionPressure = computed(() => Math.round(25 + 0.73 * drillingPower.value))
+const feedPressure       = computed(() => Math.round(20 + 0.76 * drillingPower.value))
+const flushPressure      = computed(() => Math.round(18 + 0.78 * drillingPower.value))
 const feedBar            = ref(8.4)
 const flushLMin          = ref(15.8)
 
@@ -344,11 +344,18 @@ const scaleMarks = [
           </div>
 
           <!-- Drilling power -->
-          <div class="level-row" aria-label="Drilling power 78 percent">
+          <div class="level-row" :aria-label="`Drilling power ${drillingPower} percent`">
             <span class="level-row__label">Drilling power</span>
             <div class="level-row__track">
               <div class="level-row__fill" :style="{ width: `${drillingPower}%` }"/>
               <div class="level-row__needle" :style="{ left: `${drillingPower}%` }"/>
+              <input
+                type="range"
+                class="level-row__range"
+                v-model.number="drillingPower"
+                min="0" max="100" step="1"
+                aria-label="Drilling power"
+              />
             </div>
             <span class="level-row__val">{{ drillingPower }}<span class="level-row__unit">%</span></span>
           </div>
@@ -626,6 +633,15 @@ const scaleMarks = [
   top: -5px; width: 2px; height: 17px;
   background: var(--hmi-blue-100);
   transform: translateX(-50%);
+}
+.level-row__range {
+  position: absolute;
+  inset: -10px 0;
+  width: 100%;
+  height: calc(100% + 20px);
+  opacity: 0;
+  cursor: pointer;
+  margin: 0;
 }
 .level-row__val  { font-family: var(--hmi-mono); font-size: 13px; font-weight: 600; color: var(--hmi-ink-1); white-space: nowrap; min-width: 48px; text-align: right; }
 .level-row__unit { font-size: 10px; color: var(--hmi-ink-3); margin-left: 2px; font-weight: 400; }
