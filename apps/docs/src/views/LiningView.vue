@@ -659,7 +659,6 @@ const scaleMarks = [
   align-items: center;
   gap: 10px;
   justify-content: center;
-  padding-right: 24px;
 }
 .depth-label {
   font-size: 15px;
@@ -678,6 +677,7 @@ const scaleMarks = [
   font-weight: 600;
   text-align: center;
   font-variant-numeric: tabular-nums;
+  padding-right: 20px;
 }
 .depth-input:focus { outline: 2px solid var(--hmi-blue-300); outline-offset: 2px; }
 .depth-unit { font-size: 15px; color: var(--hmi-ink-3); }
