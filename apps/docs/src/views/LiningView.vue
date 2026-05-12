@@ -23,9 +23,9 @@ const positionM = ref(-0.7) // metres from tunnel centre
 
 // Right sidebar gauges — driven by drilling power
 const drillingPower      = ref(78)
-const percussionPressure = computed(() => Math.round(25 + 0.73 * drillingPower.value))
-const feedPressure       = computed(() => Math.round(20 + 0.76 * drillingPower.value))
-const flushPressure      = computed(() => Math.round(18 + 0.78 * drillingPower.value))
+const percussionPressure = computed(() => Math.round(1.50 * drillingPower.value))
+const feedPressure       = computed(() => Math.round(1.45 * drillingPower.value + 5))
+const flushPressure      = computed(() => Math.round(1.40 * drillingPower.value + 10))
 const feedBar            = ref(8.4)
 const flushLMin          = ref(15.8)
 
