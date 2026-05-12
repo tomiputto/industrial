@@ -37,7 +37,7 @@ const C = {
   blue:    '#1f8fe6',
   orange:  '#f26a1a',
   yellow:  '#f0b429',
-  inkMute: '#5e6770',
+  inkMute: '#f1f4f7',
 }
 
 const ratio = computed(() => {
