@@ -666,7 +666,7 @@ const scaleMarks = [
   font-weight: 500;
 }
 .depth-input {
-  width: 72px;
+  width: 96px;
   height: 44px;
   background: var(--hmi-surface-2);
   border: 1px solid var(--hmi-surface-4);
@@ -675,9 +675,9 @@ const scaleMarks = [
   font-family: var(--hmi-font);
   font-size: 18px;
   font-weight: 600;
-  text-align: center;
+  text-align: left;
   font-variant-numeric: tabular-nums;
-  padding-right: 20px;
+  padding: 0 8px 0 12px;
 }
 .depth-input:focus { outline: 2px solid var(--hmi-blue-300); outline-offset: 2px; }
 .depth-unit { font-size: 15px; color: var(--hmi-ink-3); }
