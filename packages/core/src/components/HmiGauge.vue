@@ -21,6 +21,8 @@ const props = withDefaults(defineProps<{
   showNeedle?: boolean
   /** Scale labels: array of { t: 0..1, text: string } */
   scaleLabels?: { t: number; text: string }[]
+  /** Yellow warning zone: { from: 0..1, to: 0..1 } */
+  warnZone?: { from: number; to: number }
 }>(), {
   type: 'full',
   min: 0,
@@ -34,6 +36,7 @@ const C = {
   track:   '#586168',
   blue:    '#1f8fe6',
   orange:  '#f26a1a',
+  yellow:  '#f0b429',
   inkMute: '#5e6770',
 }
 
@@ -129,17 +132,22 @@ const FULL = { cx: 100, cy: 100, r: 76, startAngle: 135, sweep: 270, ticks: 48 }
 const fullSegs = computed<{ x1: number; y1: number; x2: number; y2: number; color: string }[]>(() => {
   const { cx, cy, r, startAngle, sweep, ticks } = FULL
   const redStart = Math.round((1 - props.redZone) * ticks)
+  const warnFrom = props.warnZone ? Math.round(props.warnZone.from * ticks) : -1
+  const warnTo   = props.warnZone ? Math.round(props.warnZone.to   * ticks) : -1
   return Array.from({ length: ticks }, (_, i) => {
     const t = i / (ticks - 1)
     const ang = startAngle + t * sweep
     const rad = ang * Math.PI / 180
     const inner = r - 9
+    const color = i >= redStart
+      ? C.orange
+      : (i >= warnFrom && i < warnTo ? C.yellow : C.track)
     return {
       x1: cx + Math.cos(rad) * inner,
       y1: cy + Math.sin(rad) * inner,
       x2: cx + Math.cos(rad) * r,
       y2: cy + Math.sin(rad) * r,
-      color: i >= redStart ? C.orange : C.track,
+      color,
     }
   })
 })

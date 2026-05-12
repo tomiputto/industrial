@@ -232,6 +232,7 @@ const scaleMarks = [
               unit="bar"
               label="Percussion pressure"
               :red-zone="0.18"
+              :warn-zone="{ from: 100/150, to: 125/150 }"
             />
             <div class="gauge-sub" aria-label="42 RPM">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false">
