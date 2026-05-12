@@ -457,6 +457,7 @@ const scaleMarks = [
   gap: 48px;
   justify-content: center;
   margin-bottom: 4px;
+  padding-top: 20px;
 }
 .angle-item {
   display: flex;
