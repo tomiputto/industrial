@@ -569,7 +569,7 @@ const scaleMarks = [
   gap: 6px;
   color: var(--hmi-ink-2);
   font-size: 13px;
-  margin-top: -28px;
+  margin-top: -44px;
   height: 22px;
 }
 .gauge-sub__val  { font-weight: 700; font-size: 16px; color: var(--hmi-ink-1); font-variant-numeric: tabular-nums; }
