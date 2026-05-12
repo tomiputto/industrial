@@ -557,7 +557,7 @@ const scaleMarks = [
   gap: 0;
 }
 .gauge-wrap :deep(.hmi-gauge-card__title) { display: none; }
-.gauge-wrap :deep(.hmi-gauge-svg)         { max-height: 160px; }
+.gauge-wrap :deep(.hmi-gauge-svg)         { max-height: 190px; }
 .gauge-wrap :deep(.hmi-gauge__value--full){ font-size: 32px; }
 .gauge-wrap :deep(.hmi-gauge__unit)       { font-size: 11px; margin-top: 2px; }
 .gauge-wrap :deep(.hmi-gauge-full-wrap__center) { top: 56%; }
