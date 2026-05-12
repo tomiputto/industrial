@@ -295,7 +295,7 @@ const ariaValueText = computed(() => `${props.value} ${props.unit}`.trim())
             :key="lbl.txt"
             :x="lbl.x" :y="lbl.y"
             :fill="C.inkMute"
-            font-size="10"
+            font-size="13"
             font-family="Manrope, system-ui, sans-serif"
             text-anchor="middle"
             dominant-baseline="middle"
