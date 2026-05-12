@@ -127,19 +127,19 @@ const scaleMarks = [
               <line x1="350" y1="100" x2="350" y2="400" stroke="#3a444d" stroke-width="1.5" stroke-dasharray="5 5"/>
 
               <!-- drill rig — orange rectangle rotated by tilt -->
-              <g :transform="`rotate(${equipRotation}, 350, 300)`">
+              <g :transform="`rotate(${equipRotation}, 350, 260)`">
                 <!-- outer frame -->
-                <rect x="255" y="195" width="190" height="210" rx="6" fill="#c04a10" stroke="#7a2a04" stroke-width="2"/>
+                <rect x="255" y="155" width="190" height="210" rx="6" fill="#c04a10" stroke="#7a2a04" stroke-width="2"/>
                 <!-- inner structural panels -->
-                <rect x="267" y="207" width="166" height="186" rx="3" fill="#a03a08"/>
+                <rect x="267" y="167" width="166" height="186" rx="3" fill="#a03a08"/>
                 <!-- vertical struts -->
-                <line v-for="i in 5" :key="i" :x1="272 + i*28" y1="212" :x2="272 + i*28" y2="388" stroke="#7a2a04" stroke-width="2"/>
+                <line v-for="i in 5" :key="i" :x1="272 + i*28" y1="172" :x2="272 + i*28" y2="348" stroke="#7a2a04" stroke-width="2"/>
                 <!-- horizontal brace -->
-                <rect x="263" y="286" width="174" height="8" fill="#8a3006" rx="1"/>
+                <rect x="263" y="246" width="174" height="8" fill="#8a3006" rx="1"/>
                 <!-- side arm left -->
-                <rect x="220" y="270" width="40" height="14" rx="3" fill="#b04010"/>
+                <rect x="220" y="230" width="40" height="14" rx="3" fill="#b04010"/>
                 <!-- side arm right -->
-                <rect x="440" y="270" width="40" height="14" rx="3" fill="#b04010"/>
+                <rect x="440" y="230" width="40" height="14" rx="3" fill="#b04010"/>
               </g>
 
               <!-- position indicator line (blue, from centre to scale) -->
@@ -154,16 +154,16 @@ const scaleMarks = [
 
               <!-- status circles on drill rig corners (after rotation so they appear fixed) -->
               <!-- top-left: allow (blue) -->
-              <g :transform="`rotate(${equipRotation}, 350, 300)`">
-                <circle cx="270" cy="215" r="24" fill="rgba(31,143,230,0.1)" stroke="#6bb5ee" stroke-width="3"/>
+              <g :transform="`rotate(${equipRotation}, 350, 260)`">
+                <circle cx="270" cy="175" r="24" fill="rgba(31,143,230,0.1)" stroke="#6bb5ee" stroke-width="3"/>
                 <!-- top-right: deny (orange) -->
-                <circle cx="430" cy="215" r="24" fill="rgba(242,106,26,0.1)" stroke="#f26a1a" stroke-width="3"/>
-                <line x1="413" y1="198" x2="447" y2="232" stroke="#f26a1a" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="430" cy="175" r="24" fill="rgba(242,106,26,0.1)" stroke="#f26a1a" stroke-width="3"/>
+                <line x1="413" y1="158" x2="447" y2="192" stroke="#f26a1a" stroke-width="3" stroke-linecap="round"/>
                 <!-- bottom-left: deny (orange) -->
-                <circle cx="270" cy="385" r="24" fill="rgba(242,106,26,0.1)" stroke="#f26a1a" stroke-width="3"/>
-                <line x1="253" y1="368" x2="287" y2="402" stroke="#f26a1a" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="270" cy="345" r="24" fill="rgba(242,106,26,0.1)" stroke="#f26a1a" stroke-width="3"/>
+                <line x1="253" y1="328" x2="287" y2="362" stroke="#f26a1a" stroke-width="3" stroke-linecap="round"/>
                 <!-- bottom-right: allow (blue) -->
-                <circle cx="430" cy="385" r="24" fill="rgba(31,143,230,0.1)" stroke="#6bb5ee" stroke-width="3"/>
+                <circle cx="430" cy="345" r="24" fill="rgba(31,143,230,0.1)" stroke="#6bb5ee" stroke-width="3"/>
               </g>
 
               <!-- horizontal scale line -->
